@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>KodeNames</title>
+  <meta name="description" content="Kodenames">
+  <meta name="author" content="SitePoint">
+  <link rel="stylesheet" href="styles/styles.css?v=1.0">
+  <link rel="stylesheet" href="styles/jquery-ui.css">
+</head>
+
+<body>
+  <div>
+    <div id='header'>
+      <a href="https://github.com/ninjabunny/KodeNames" target='_blank'>Kodenames</a>
+      <span id="redScore"></span>
+      <span id="blueScore"></span>
+      <input type="hidden" id="seed">
+      <button id="reset" onclick="fire()">Reset</button>
+    </div>
+  </div>
+  <div id="board"></div>
+  <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+  <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="scripts/data.js"></script>
+  <script src="scripts/seedrandom.js"></script>
+  <script src="scripts/index.js"></script>
+  <script type="text/javascript">
+  	setPlayerSeed(new URL(location.href).searchParams.get('seed'));
+  	setSpectatorTrue();
+  	fire();
+  </script>
+  
+</body>
+</html>
