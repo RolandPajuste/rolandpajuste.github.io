@@ -9,8 +9,10 @@ var wordsSelected = [];
 var teams = [];
 var NUMBER_OF_WORDS = 25;
 var spyMasterMode = false;
+var playerMode = false;
 var sessionData = [];
 var customData = [];
+var playerSeed = "";
 
 var COLOR_RED = "#ff0000";
 var COLOR_YELLOW = "#ffff00";
@@ -29,11 +31,14 @@ $("#gameMode").change(function() {
 
 
 $("#seed").val(Math.floor(Math.random() * 1000));
-fire();
 
 function fire() {
 	//get seed and set the seed for randomizer
-	var seed = document.getElementById("seed").value;
+	if (!playerMode) {
+		var seed = document.getElementById("seed").value;
+	} else {
+		var seed = playerSeed;
+	}
 	Math.seedrandom(seed.toLowerCase());
 
 	var option = $('#gameMode :selected').val();
@@ -60,12 +65,17 @@ function fire() {
 
 	wordsSelected = [];
 	teams = [];
-	spyMasterMode = false;
+	
 	document.getElementById("board").innerHTML = "";
+	var spyMasterMode = false;
 
 	//fire new board
-	updateScore();
 	createNewGame();
+	
+	if (!playerMode) {
+		spyMaster();
+		updateScore();
+	}
 }
 
 //not used, but probably useful at some point
@@ -86,7 +96,11 @@ function createNewGame() {
 		var word = sessionData[randomNumber];
 		removeItem(sessionData, randomNumber);
 		wordsSelected.push(word);
-		trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"clicked(\'" + i + "\')\"><div><a href=\"#\"><span class=\"ada\"></span>" + word + "</a></div></div>";
+		if (!playerMode) {
+			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"clicked(\'" + i + "\')\"><div><a href=\"#\"><span class=\"ada\"></span>" + word + "</a></div></div>";
+		} else {
+			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"colorChoice(\'" + i + "\')\"><div><a href=\"#\"><span class=\"ada\"></span>" + word + "</a></div></div>";
+		}
 	}
 	//<a href="#"><span class="ada">Washington stimulates economic growth </span>Read me</a>
 	for (var i = 0; i < trs.length; i++) {
@@ -102,14 +116,10 @@ function createNewGame() {
 	// one extra for one of the teams
 	if (Math.floor(Math.random() * data.length) % 2 === 0) {
 		teams.push(COLOR_RED);
-		// document.getElementById("team").style.color = COLOR_RED;
-		// document.getElementById("team").innerHTML = "RED";
 		$('#board').addClass('redStarts').removeClass('blueStarts');
 
 	} else {
 		teams.push(COLOR_BLUE);
-		// document.getElementById("team").style.color = COLOR_BLUE;
-		// document.getElementById("team").innerHTML = "BLUE";
 		$('#board').addClass('blueStarts').removeClass('redStarts');
 	}
 
@@ -128,9 +138,15 @@ function createNewGame() {
 }
 
 function clicked(value) {
+	clicked(value, -1);
+}
+
+function clicked(value, color) {
 	if (spyMasterMode) {
 		//spymaster mode
 		document.getElementById(value).style.backgroundColor = COLOR_GREEN;
+	} else if (playerMode) {
+		document.getElementById(value).style.backgroundColor = color;
 	} else {
 		//guessers mode
 		var word = wordsSelected[value];
@@ -204,6 +220,10 @@ function spyMaster() {
 	}
 }
 
+function setSpectatorTrue() {
+	playerMode = true;
+}
+
 function shuffle(array) {
 	var currentIndex = array.length,
 		temporaryValue, randomIndex;
@@ -233,4 +253,26 @@ document.getElementById('seed').onkeypress = function(e) {
 		fire();
 		return false;
 	}
+}
+
+function openPlayerView(url) {
+	var seed = document.getElementById("seed").value;
+	Math.seedrandom(seed.toLowerCase());
+	window.open("playerView.html?seed=" + encodeURIComponent(btoa(seed)));
+}
+
+function setPlayerSeed(urlSeed) {
+	playerSeed = atob(decodeURIComponent(urlSeed));
+}
+
+function colorChoice(e) {
+    var dialog = $('<p>Which color?</p>').dialog({
+        buttons: {
+        	"White": function() {clicked(e, 'white'); dialog.dialog('close');},
+            "Yellow": function() {clicked(e, COLOR_YELLOW); dialog.dialog('close');},
+            "Red": function() {clicked(e, COLOR_RED); dialog.dialog('close');},
+            "Blue": function() {clicked(e, COLOR_BLUE); dialog.dialog('close');},
+            "Black": function() {clicked(e, COLOR_BLACK); dialog.dialog('close');}
+        }
+    });
 }
