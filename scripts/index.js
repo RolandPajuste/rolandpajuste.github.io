@@ -97,9 +97,14 @@ function createNewGame() {
 		removeItem(sessionData, randomNumber);
 		wordsSelected.push(word);
 		if (!playerMode) {
-			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"clicked(\'" + i + "\')\"><div><a href=\"#\"><span class=\"ada\"></span>" + word + "</a></div></div>";
+			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"clicked(\'" + i + "\')\"><div><a href=\"#\">" + word + "</a></div></div>";
 		} else {
-			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\' onclick=\"colorChoice(\'" + i + "\')\"><div><a href=\"#\"><span class=\"ada\"></span>" + word + "</a></div></div>";
+			trs[i % 5] += "<div class=\"word\" id=\'" + i + "\'><button class='button' onClick='clicked(\"" + i + "\", \"white\")'></button>" +
+					"<button class='button button2' onClick='clicked(\"" + i + "\", COLOR_BLUE)'></button>" +
+					"<button class='button button3' onClick='clicked(\"" + i + "\", COLOR_RED)'></button>" +
+					"<button class='button button4' onClick='clicked(\"" + i + "\", COLOR_YELLOW)'></button>" +
+					"<button class='button button5' onClick='clicked(\"" + i + "\", COLOR_BLACK)'></button><div>" + word + "</div></div>";
+			
 		}
 	}
 	//<a href="#"><span class="ada">Washington stimulates economic growth </span>Read me</a>
